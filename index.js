@@ -1,4 +1,5 @@
-const Main = require('./core/main');
+const Main = require('./main');
+require('dotenv').config();
 
 const main = new Main();
 

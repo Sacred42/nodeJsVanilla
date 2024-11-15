@@ -1,5 +1,5 @@
 const Http = require('./api/Http');
-const DataBase = require('./Database');
+const DataBase = require('./db/Database');
 const Route = require('./routes/routes');
 
 const http = new Http();

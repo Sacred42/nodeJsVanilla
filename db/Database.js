@@ -1,5 +1,7 @@
 const pg = require('pg')
 const { Pool } = pg
+const CustomError = require('../errors/CustomError');
+require('dotenv').config();
 class DataBase {
     constructor() {
         if (DataBase.instance) {
@@ -20,28 +22,38 @@ class DataBase {
         try {
             this.client.query(`SELECT * FROM Users`)
         } catch (error) {
-            throw Error(error)
+            throw new CustomError({ error })
         }
     }
 
-    async getUser(id) {
+    async getUser(name) {
         try {
-            const data = await this.client.query(`SELECT * FROM Users WHERE PersonID = ${id}`);
+            const data = await this.client.query(`SELECT * FROM Users WHERE name = '${name}'`);
             return data
         } catch (error) {
-            throw Error(error)
+            throw new CustomError({ error })
         }
     }
 
-    async setUsers(id, name, refToken) {
+    async validateUser(name, password) {
         try {
-            const user = await this.getUser(id);
-            if (user) {
-                return;
-            }
-            this.client.query(`INSERT INTO Users (PersonID, Name, RefToken) VALUES (${id}, '${name}', '${refToken}')`);
+            const data = await this.client.query(`SELECT * FROM Users WHERE name = '${name}' AND password = '${password}'`);
+            return data.rows.length
         } catch (error) {
-            throw Error(error)
+            throw CustomError({ error })
+        }
+    }
+
+    async setUsers(name, password, refToken) {
+        try {
+
+            const user = await this.getUser(name);
+            if (user.rows.length) {
+                throw new CustomError({ message: 'User already exists!!!', status: HTTP_STATUS_CODE.BAD_REQUEST })
+            }
+            this.client.query(`INSERT INTO Users (Name, RefToken, role_id, password) VALUES ('${name}', '${refToken}', ${1}, '${password}')`);
+        } catch (error) {
+            throw new CustomError({ error })
         }
     }
 }

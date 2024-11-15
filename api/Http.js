@@ -3,7 +3,7 @@ const http = require('http');
 class Http {
     constructor() {
         this.headers = {
-            'Access-Control-Allow-Origin': 'http://localhost:3000',
+            'Access-Control-Allow-Origin': 'http://localhost:4200',
             "Access-Control-Allow-Headers": "Authorization ,Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers",
             "Access-Control-Allow-Credentials": true,
             'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',

@@ -4,11 +4,11 @@ class Auth {
     constructor() { }
 
     getAccessToken() {
-        return jwt.sign({ foo: process.env.SECRET_KEY_AUTH_ACCESS_TOKEN }, secretAccessToken, { expiresIn: '40s' })
+        return jwt.sign({ foo: 'bar' }, process.env.SECRET_KEY_AUTH_ACCESS_TOKEN, { expiresIn: '40s' })
     }
 
     getRefreshToken() {
-        return jwt.sign({ foo: process.env.SECRET_KEY_AUTH_REFRESH_TOKEN }, secretRefreshToken, { expiresIn: '1200s' })
+        return jwt.sign({ foo: 'bar2' }, process.env.SECRET_KEY_AUTH_REFRESH_TOKEN, { expiresIn: '1200s' })
     }
 
     parseTokenFromCookie(cookie) {
@@ -16,7 +16,7 @@ class Auth {
     }
 
     validationToken(token, typeToken) {
-        return jwt.verify(token, typeToken === 'refresh' ? process.env.SECRET_KEY_AUTH_ACCESS_TOKEN : process.env.SECRET_KEY_AUTH_REFRESH_TOKEN, (err) => {
+        return jwt.verify(token, typeToken === 'refresh' ? process.env.SECRET_KEY_AUTH_REFRESH_TOKEN : process.env.SECRET_KEY_AUTH_ACCESS_TOKEN, (err) => {
             if (err) {
                 return false
             }
