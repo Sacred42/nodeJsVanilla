@@ -1,6 +1,7 @@
 const pg = require('pg')
 const { Pool } = pg
 const CustomError = require('../errors/CustomError');
+const HTTP_STATUS_CODE = require('../constants/httpStatusCode');
 require('dotenv').config();
 class DataBase {
     constructor() {
@@ -40,7 +41,7 @@ class DataBase {
             const data = await this.client.query(`SELECT * FROM Users WHERE name = '${name}' AND password = '${password}'`);
             return data.rows.length
         } catch (error) {
-            throw CustomError({ error })
+            throw new CustomError({ error })
         }
     }
 

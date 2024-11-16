@@ -12,23 +12,6 @@ class Http {
         }
     }
 
-    async handleStream(req) {
-        return new Promise((resolve, reject) => {
-            let data;
-            req.on('data', function (chunk) {
-                data = chunk.toString();
-            })
-
-            req.on('end', function () {
-                resolve(data);
-            })
-
-            req.on('error', function (error) {
-                reject(error);
-            })
-        })
-    }
-
     start = function (routes) {
         const mainHeaders = this.headers;
         const server = http.createServer(async function (req, res) {
@@ -37,11 +20,17 @@ class Http {
                 res.end();
                 return;
             }
-            const { data, headers, status } = await routes[req.url](req, res);
 
-            res.writeHead(status || 200, { ...mainHeaders, ...headers });
+            try {
+                const { data, headers, status } = await routes[`${req.method}:${req.url}`](req, res);
 
-            res.end(JSON.stringify(data))
+                res.writeHead(status || 200, { ...mainHeaders, ...headers });
+
+                res.end(JSON.stringify(data))
+            } catch (error) {
+                throw new CustomError({ error })
+            }
+
         }
         )
 

@@ -9,7 +9,7 @@ class CustomError extends Error {
             this.status = status;
         }
         else {
-            super(error.message);
+            super(error.message || 'Internal Server Error');
             this.status = 500;
         };
 

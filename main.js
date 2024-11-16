@@ -8,7 +8,7 @@ const route = new Route();
 class Main {
     init = async function () {
         new DataBase();
-        http.start(route.routes);
+        http.start(route);
 
     }
 }
