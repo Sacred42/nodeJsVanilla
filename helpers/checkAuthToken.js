@@ -3,7 +3,7 @@ const CustomError = require('../errors/CustomError');
 const auth = new Auth();
 
 const checkAuthToken = (req, res, next) => {
-    const cookie = req.headers.cookie;
+    const cookie = req.headers.authorization;
     if (cookie) {
         if (auth.validationToken(cookie, 'access')) {
             return next(req, res);

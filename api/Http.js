@@ -1,4 +1,5 @@
 const http = require('http');
+const HTTP_STATUS_CODE = require('../constants/httpStatusCode');
 
 class Http {
     constructor() {
@@ -28,7 +29,8 @@ class Http {
 
                 res.end(JSON.stringify(data))
             } catch (error) {
-                throw new CustomError({ error })
+                res.writeHead(error.status || HTTP_STATUS_CODE.SERVER_ERROR, mainHeaders);
+                res.end(JSON.stringify({ data: error.message || 'Internal Server Error', status: error.status || HTTP_STATUS_CODE.SERVER_ERROR }));
             }
 
         }

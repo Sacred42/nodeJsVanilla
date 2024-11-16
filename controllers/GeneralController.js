@@ -1,6 +1,7 @@
 const Auth = require('../auth/Auth');
 const HTTP_STATUS_CODE = require('../api/Http');
 const BaseController = require('./BaseController');
+const CustomError = require('../errors/CustomError');
 
 const auth = new Auth();
 
@@ -15,17 +16,20 @@ class GeneralController extends BaseController {
     }
 
     async index(req, res) {
-        return { data: 'Hello world', status: 200 }
+        try {
+            return { data: 'Hello world', status: 200 }
+        } catch (error) {
+            throw new CustomError({ error })
+        }
+
     }
 
     async test(req, res) {
-        return { data: 'Test Success' }
-        // const token = req.headers.authorization;
-        // if (auth.validationToken(token, 'access')) {
-        //     const cookie = req.headers.cookie;
-        //     return { data: 'Test Success' }
-        // }
-        // return { data: 'Error', status: HTTP_STATUS_CODE.FORBIDDEN }
+        try {
+            return { data: 'Test Success' }
+        } catch (error) {
+            throw new CustomError({ error })
+        }
     }
 
 

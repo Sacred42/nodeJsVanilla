@@ -14,7 +14,7 @@ class AuthController extends BaseController {
             this.createController(`${this.methods.post}:/auth`, this.auth),
             this.createController(`${this.methods.post}:/register`, this.register),
             this.createController(`${this.methods.post}:/login`, this.login),
-            this.createController(`${this.methods.post}:/refresh`, this.refresh),
+            this.createController(`${this.methods.get}:/refresh`, this.refresh),
         ]
     }
 
@@ -25,7 +25,7 @@ class AuthController extends BaseController {
             await db.setUsers(body.id, body.name, refToken);
             return { data: { acc_token: auth.getAccessToken(), refresh_token: refToken, status: null }, headers: { 'set-cookie': `ref_token=${refToken}; HttpOnly; path=/refresh;` } }
         } catch (error) {
-            return { data: 'Error', status: HTTP_STATUS_CODE.SERVER_ERROR }
+            throw new CustomError({ error })
         }
     }
 
@@ -36,7 +36,7 @@ class AuthController extends BaseController {
             await db.setUsers(body.name, body.password, refToken);
             return { data: { acc_token: auth.getAccessToken(), refresh_token: refToken, status: null }, headers: { 'set-cookie': `ref_token=${refToken}; HttpOnly; path=/refresh;` } }
         } catch (error) {
-            return { data: error.message, status: error.status }
+            throw new CustomError({ error })
         }
     }
 
@@ -50,18 +50,25 @@ class AuthController extends BaseController {
             }
             throw new CustomError({ message: 'User not found', status: HTTP_STATUS_CODE.NOT_FOUND });
         } catch (error) {
-            return { data: error.message, status: error.status }
+            throw new CustomError({ error })
         }
     }
 
     async refresh(req, res) {
-        const cookie = req.headers.cookie;
-        const oldRefToken = auth.parseTokenFromCookie(cookie);
-        if (auth.validationToken(oldRefToken, 'refresh')) {
-            const newRefToken = auth.getRefreshToken();
-            return { data: { acc_token: auth.getAccessToken(), refresh_token: newRefToken, status: null }, headers: { 'set-cookie': `ref_token=${newRefToken}; HttpOnly; path=/refresh;` } }
+        try {
+            const cookie = req.headers.cookie;
+            const oldRefToken = auth.parseTokenFromCookie(cookie);
+            if (auth.validationToken(oldRefToken, 'refresh')) {
+                const newRefToken = auth.getRefreshToken();
+                return { data: { acc_token: auth.getAccessToken(), refresh_token: newRefToken, status: null }, headers: { 'set-cookie': `ref_token=${newRefToken}; HttpOnly; path=/refresh;` } }
+            }
+            throw new CustomError({ message: 'Refresh token not valid', status: HTTP_STATUS_CODE.FORBIDDEN });
+        } catch (error) {
+            throw new CustomError({ error })
         }
-        return { data: 'Error', status: HTTP_STATUS_CODE.FORBIDDEN }
+
+
+
     }
 }
 
