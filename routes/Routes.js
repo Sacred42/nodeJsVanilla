@@ -1,5 +1,6 @@
 const AuthController = require('../controllers/AuthController');
 const GeneralController = require('../controllers/GeneralController');
+const MessageController = require('../controllers/MessageController');
 const checkAuthToken = require('../helpers/checkAuthToken');
 
 
@@ -8,7 +9,8 @@ class Routes {
     bindControllers() {
         const allControllers = [
             ...new AuthController(),
-            ...new GeneralController()
+            ...new GeneralController(),
+            ...new MessageController()
         ]
 
         allControllers.forEach((controller) => {

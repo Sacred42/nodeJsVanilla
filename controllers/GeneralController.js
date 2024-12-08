@@ -15,7 +15,7 @@ class GeneralController extends BaseController {
         ]
     }
 
-    async index(req, res) {
+    async index(req, res, socket) {
         try {
             return { data: 'Hello world', status: 200 }
         } catch (error) {
