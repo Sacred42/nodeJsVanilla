@@ -1,5 +1,5 @@
 const Auth = require('../auth/Auth');
-const HTTP_STATUS_CODE = require('../api/Http');
+const HTTP_STATUS_CODE = require('../service/Http');
 const BaseController = require('./BaseController');
 const CustomError = require('../errors/CustomError');
 
@@ -9,13 +9,16 @@ const auth = new Auth();
 class GeneralController extends BaseController {
     constructor() {
         super()
+    }
+
+    initControllers() {
         return this.controllers = [
             this.createController(`${this.methods.get}:/`, this.index),
             this.createController(`${this.methods.get}:/test`, this.test, true),
         ]
     }
 
-    async index(req, res, socket) {
+    index = async (req, res) => {
         try {
             return { data: 'Hello world', status: 200 }
         } catch (error) {
@@ -24,7 +27,7 @@ class GeneralController extends BaseController {
 
     }
 
-    async test(req, res) {
+    test = async (req, res) => {
         try {
             return { data: 'Test Success' }
         } catch (error) {

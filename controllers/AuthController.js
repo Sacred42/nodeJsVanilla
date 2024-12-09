@@ -12,6 +12,9 @@ const db = new DataBase();
 class AuthController extends BaseController {
     constructor() {
         super()
+    }
+
+    initControllers() {
         return this.controllers = [
             this.createController(`${this.methods.post}:/auth`, this.auth),
             this.createController(`${this.methods.post}:/register`, this.register),
@@ -21,7 +24,7 @@ class AuthController extends BaseController {
         ]
     }
 
-    async auth(req, res, socket) {
+    auth = async (req, res) => {
         try {
             const { body } = JSON.parse(await getBody(req));
             const refToken = auth.getRefreshToken();
@@ -33,7 +36,7 @@ class AuthController extends BaseController {
         }
     }
 
-    async register(req, res, socket) {
+    register = async (req, res) => {
         try {
             const { body } = JSON.parse(await getBody(req));
             const refToken = auth.getRefreshToken();
@@ -45,7 +48,7 @@ class AuthController extends BaseController {
         }
     }
 
-    async login(req, res, socket) {
+    login = async (req, res) => {
         try {
             const { body } = JSON.parse(await getBody(req));
             const data = await db.validateUser(body.name, body.password);
@@ -61,7 +64,7 @@ class AuthController extends BaseController {
         }
     }
 
-    async refresh(req, res, socket) {
+    refresh = async (req, res) => {
         try {
             const cookie = req.headers.cookie;
             const oldRefToken = auth.parseTokenFromCookie(cookie);
@@ -78,7 +81,7 @@ class AuthController extends BaseController {
         }
     }
 
-    async getUser(req, res, socket) {
+    getUser = async (req, res) => {
         try {
             const cookie = req.headers.authorization;
             const userDb = await db.getUserByAuthToken(cookie);

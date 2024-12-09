@@ -8,9 +8,9 @@ class Routes {
     routes = {};
     bindControllers() {
         const allControllers = [
-            ...new AuthController(),
-            ...new GeneralController(),
-            ...new MessageController()
+            ...new AuthController().initControllers(),
+            ...new GeneralController().initControllers(),
+            ...new MessageController().initControllers()
         ]
 
         allControllers.forEach((controller) => {
